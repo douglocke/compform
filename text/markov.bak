@@ -1,0 +1,59 @@
+const francis = "Social friendship and universal fraternity necessarily call for an acknowledgement of the worth of every human person, always and everywhere. If each individual is of such great worth, it must be stated clearly and firmly that the mere fact that some people are born in places with fewer resources or less development does not justify the fact that they are living with less dignity. This is a basic principle of social life that tends to be ignored in a variety of ways by those who sense that it does not fit into their worldview or serve their purposes.  Every human being has the right to live with dignity and to develop integrally; this fundamental right cannot be denied by any country. People have this right even if they are unproductive, or were born with or developed limitations. This does not detract from their great dignity as human persons, a dignity based not on circumstances but on the intrinsic worth of their being. Unless this basic principle is upheld, there will be no future either for fraternity or for the survival of humanity.  Some societies accept this principle in part. They agree that opportunities should be available to everyone, but then go on to say that everything depends on the individual. From this skewed perspective, it would be pointless to favour an investment in efforts to help the slow, the weak or the less talented to find opportunities in life. Investments in assistance to the vulnerable could prove unprofitable; they might make things less efficient. No. What we need in fact are states and civil institutions that are present and active, that look beyond the free and efficient working of certain economic, political or ideological systems, and are primarily concerned with individuals and the common good.  Some people are born into economically stable families, receive a fine education, grow up well nourished, or naturally possess great talent. They will certainly not need a proactive state; they need only claim their freedom. Yet the same rule clearly does not apply to a disabled person, to someone born in dire poverty, to those lacking a good education and with little access to adequate health care. If a society is governed primarily by the criteria of market freedom and efficiency, there is no place for such persons, and fraternity will remain just another vague ideal.";
+const piusx = "So, too, We would make public profession of Our gratitude for the many striking demonstrations of affection and reverence which have been offered Us by Our most beloved children in all parts of the world on the occasion of Our sacerdotal jubilee. Most grateful have they been to Us, not so much for Our own sake as for the sake of religion and the Church, as being a profession of fearless faith, and, as it were, a public manifestation of due honor to Christ and His Church, by the respect shown to him whom the Lord has placed over His family. Other fruits of the same kind, too, have greatly rejoiced Us; the celebrations with which dioceses in North America have commemorated the centenary of their foundation, returning everlasting thanks to god for having added so many children to the Catholic Church; the splendid sight presented by the most noble island of Britain in the restored honor paid with such wonderful pomp within its confines to the Blessed Eucharist, in the presence of a dense multitude, and with a crown formed of Our venerable brethren, and of Our own Legate; and in France where the afflicted Church dried her tears to see such brilliant triumphs of the August Sacrament, especially in the town of Lourdes, the fiftieth anniversary of whose origin We have also been rejoiced to witness commemorated with such solemnity. In these and other facts all must see, and let the enemies of Catholicism be persuaded of it, that the splendor of ceremonial, and the devotion paid to the August Mother of God, and even the filial homage offered to the Supreme Pontiff, are all destined finally for the glory of God, that Christ may be all and in all (Coloss. iii. II), that the Kingdom of God may be established on earth, and eternal salvation gained for men.";
+const doug = "Hello there is Doug";
+
+//const model = generateModel(francis + " " + piusx);
+const model = generateModel(doug);
+const output_text = generateText("Brethern, ", model);
+
+document.body.innerHTML = output_text;
+// console.log(output_text);
+
+function generateModel(input_text) {
+    const words = input_text.split(" ");
+    const model = {};
+
+    // loop through all the words except the last one.
+    for (let i = 0; i < words.length - 1; i++) {
+        const target_word = words[i];
+        const next_word = words[i + 1];
+
+        // if the model doesn't contain the target word, add it.
+        if (!model[target_word]) {
+            model[target_word] = [];
+        }
+
+        // add the next word to the possibilities for target_word
+        model[target_word].push(next_word);
+    }
+
+    return model;
+}
+
+
+function generateText(first_word, model) {
+    // start with the word passed in
+    let output_text = first_word;
+    let current_word = first_word;
+    for (let i = 0; i < 120; i++) {
+        // choose the next word by sampling from options in the model
+        current_word = sample(model[current_word]);
+
+        // append word to output
+        output_text += " ";
+        output_text += current_word;
+
+        // if we get to a word that ends with "." we are done.
+        const last_character = current_word.substr(current_word.length - 1);
+        if (last_character === ".") {
+            break;
+        }
+    }
+    return output_text;
+}
+
+function sample(array) {
+    const index = Math.floor(Math.random() * array.length);
+    return array[index];
+}
+
